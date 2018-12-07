@@ -1,0 +1,1 @@
+#user modela and blog post model
