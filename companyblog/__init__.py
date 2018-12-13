@@ -5,6 +5,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager
 
 app = Flask(__name__)
 
@@ -15,6 +16,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS']  = False
 
 db = SQLAlchemy(app)
 Migrate(app,db)
+
+########## Login Configs ###########
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 from companyblog.core.views import core
 from companyblog.error_pages.handlers import error_pages
