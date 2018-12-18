@@ -1,8 +1,13 @@
-from companyblog import db
+from companyblog import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from datetime import datetime
 
-class User(db.Model):
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     profile_image = db.Column(db.String(64), null=False, default = 'default_profile.png')# will be a link to a user file 
@@ -21,8 +26,24 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return f"Username { self.username } "  
+        return f"Username { self.username }"  
     
       
 class BlogPost(db.Model):
-    pass
+    
+    users = db.relationship(User)
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    title = db.Column(db.String(140), nullable=False)
+    text = db.Column(db.Text, nullable=False)
+
+    def __init__(self,title,text,user_id):
+        self.title = title
+        self.text = text
+        self.user_id = user_id
+
+    def __repr__(self):
+        return f"Post Id: {self.id} -- Date: {self.date} -- Title: {self.title}"
