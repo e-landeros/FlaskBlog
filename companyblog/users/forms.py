@@ -1,0 +1,16 @@
+from flask_wtf import FlaskForm
+from wtforms StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Email, EqualTo
+from wtforms import ValidationError
+from flask_wtf.file import FileField, FileAllowed # to allow user to update their profile image
+
+from flask_login import current_user
+from companyblog.models import user
+
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit - SubmitField('Log In')
+
+class RegistrationForm(FLaskForm):
+    
